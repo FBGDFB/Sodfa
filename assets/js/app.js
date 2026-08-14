@@ -25,8 +25,11 @@ function mix(a,b,t){var A=hexToRgb(a),B=hexToRgb(b);return rgbToHex(A[0]+(B[0]-A
 function lighten(x,t){return mix(x,'#ffffff',t);}
 function darken(x,t){return mix(x,'#000000',t);}
 
-var STAR = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.4 5.8 21l1.6-7L2 9.3l7.1-.7z"/></svg>';
+function starSVG(w) { return '<svg width="' + w + '" height="' + w + '" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.4 5.8 21l1.6-7L2 9.3l7.1-.7z"/></svg>'; }
+var STAR = starSVG(16);
 var CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>';
+var LEAF = '<svg viewBox="0 0 24 24" fill="currentColor" width="100%" height="100%"><path d="M12 2C6.5 7.5 4.5 11.5 6.3 16c1.5 3.8 5.7 6 5.7 6s4.2-2.2 5.7-6c1.8-4.5-.2-8.5-5.7-14z"/></svg>';
+var FLOWER = '<svg viewBox="0 0 24 24" width="100%" height="100%"><g fill="currentColor"><circle cx="12" cy="5" r="3.1"/><circle cx="18.7" cy="9.9" r="3.1"/><circle cx="16.1" cy="17.6" r="3.1"/><circle cx="7.9" cy="17.6" r="3.1"/><circle cx="5.3" cy="9.9" r="3.1"/></g><circle cx="12" cy="12" r="2.5" fill="#C6A15B"/></svg>';
 
 var ICONS = {
   cod: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/></svg>',
@@ -38,6 +41,15 @@ var ICONS = {
   sparkle: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/></svg>',
   sun: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>',
   leaf: '<svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 7.5 4.5 11.5 6.3 16c1.5 3.8 5.7 6 5.7 6s4.2-2.2 5.7-6c1.8-4.5-.2-8.5-5.7-14z"/></svg>'
+};
+
+/* أيقونات قسم المميزات — مطابقة تماماً لأيقونات النسخة الأصلية (24px) */
+var BEN_ICONS = {
+  shield: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>',
+  droplet: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z"/><path d="M9.5 14a2.5 2.5 0 0 0 2.5 2.5"/></svg>',
+  sprout: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21V9"/><path d="M12 9C12 5 9 3 5 3c0 4 3 6 7 6zM12 13c0-4 3-6 7-6 0 4-3 6-7 6z"/></svg>',
+  sparkle: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3v7a3 3 0 0 0 6 0V3M10 3v18"/><circle cx="17.5" cy="14.5" r="3.5"/><path d="M17.5 8v2M17.5 19v2M23 14.5h-2M14 14.5h-2"/></svg>',
+  sun: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>'
 };
 
 function waLink(num, msg) { return "https://wa.me/" + num + (msg ? "?text=" + encodeURIComponent(msg) : ""); }
@@ -112,7 +124,8 @@ function buildApp() {
   var chain = Promise.resolve();
   sectionList.forEach(function (s) {
     if (!s.enabled) return; /* القسم غير المفعّل لا يتم تحميله إطلاقاً */
-    var mount = document.createElement(s.id === "hero" ? "div" : "section");
+    /* الفوتر يُركَّب في div حتى لا يكتسب padding الأقسام (section) — مطابق للأصل */
+    var mount = document.createElement(s.id === "hero" || s.id === "footer" ? "div" : "section");
     mount.setAttribute("data-section", s.id);
     mount.id = s.id;
     if (s.id === "stats" || s.id === "trust") mount.classList.add("band-wrap");
@@ -125,17 +138,24 @@ function buildApp() {
         bindHrefs(mount, CONFIG);
         if (INIT[s.id]) INIT[s.id](mount, CONFIG);
         revealIn(mount);
-        markImagesLoaded(mount);
       }).catch(function () {
         mount.innerHTML = '<div class="load-error">تعذر تحميل هذا القسم<br><button class="retry-btn" data-retry="' + s.id + '">إعادة المحاولة</button></div>';
       });
     });
   });
   chain.then(function () {
+    applyStoreFlush();
     applyPageSettings();
     applyButtonSettings();
     bindGlobalUI();
   });
+}
+
+/* إذا كان قسم المتجر آخر قسم مفعّل: نجعل المتجر والفوتر متمددين بلا هوامش — مطابق للأصل */
+function applyStoreFlush() {
+  var last = null;
+  sectionList.forEach(function (s) { if (s.enabled && s.id !== "footer") last = s.id; });
+  document.documentElement.classList.toggle("store-flush", last === "store");
 }
 
 app.addEventListener("click", function (e) {
@@ -143,23 +163,21 @@ app.addEventListener("click", function (e) {
   if (btn) buildApp();
 });
 
-/* ─── Reveal ─── */
+/* ─── Reveal: عند التمرير (IntersectionObserver) — مطابق لسلوك النسخة الأصلية ─── */
+var rvObs = null;
 function revealIn(root) {
-  qsa(".rv", root).forEach(function (el) {
-    var d = parseInt(el.getAttribute("data-d") || "0", 10);
-    setTimeout(function () { el.classList.add("in"); }, d + 60);
-  });
-}
-
-/* ─── ظهور الصور بعد التحميل ─── */
-document.addEventListener("load", function (e) {
-  var img = e.target;
-  if (img && img.tagName === "IMG") img.classList.add("img-loaded");
-}, true);
-function markImagesLoaded(root) {
-  qsa("img", root).forEach(function (img) {
-    if (img.complete) img.classList.add("img-loaded");
-  });
+  if (!rvObs) {
+    rvObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target;
+        var d = parseInt(el.getAttribute("data-d") || "0", 10);
+        setTimeout(function () { el.classList.add("in"); }, d);
+        rvObs.unobserve(el);
+      });
+    }, { threshold: .12 });
+  }
+  qsa(".rv", root).forEach(function (el) { rvObs.observe(el); });
 }
 
 /* ─── عدادات الأرقام ─── */
@@ -194,7 +212,7 @@ var RENDER = {
     var d = c.hero;
     qs('[data-el="badge"]', h).textContent = d.badge;
     qs('[data-el="title"]', h).innerHTML = d.h1a + ' <span class="grad">' + d.hl + "</span> " + d.h1b;
-    qs('[data-el="lead"]', h).textContent = d.lead;
+    qs('[data-el="lead"]', h).innerHTML = d.lead;
     qs('[data-el="rate"]', h).textContent = d.rate;
     qs('[data-el="trustNote"]', h).textContent = d.trustNote;
     var stars = "";
@@ -204,29 +222,30 @@ var RENDER = {
   },
   stats: function (h, c) {
     var list = qs("[data-list]", h);
-    list.innerHTML = c.stats.map(function (s) {
-      return '<div class="stat"><div class="num"><span data-count="' + s.count + '" data-pre="' + (s.pre || "") + '" data-suf="' + (s.suf || "") + '">0</span></div><div class="lbl">' + s.label + "</div></div>";
+    list.innerHTML = c.stats.map(function (s, i) {
+      return '<div class="stat rv" data-d="' + i * 80 + '"><div class="num"><span data-count="' + s.count + '" data-pre="' + (s.pre || "") + '" data-suf="' + (s.suf || "") + '">0</span></div><div class="lbl">' + s.label + "</div></div>";
     }).join("");
   },
   trust: function (h, c) {
     var list = qs("[data-list]", h);
-    list.innerHTML = c.trust.map(function (t) {
-      return '<div class="tb-item"><span class="tb-ic">' + (ICONS[t.icon] || ICONS.leaf) + "</span><div><b>" + t.title + "</b><small>" + t.desc + "</small></div></div>";
+    list.innerHTML = c.trust.map(function (t, i) {
+      return '<div class="tb-item rv" data-d="' + i * 80 + '"><span class="tb-ic">' + (ICONS[t.icon] || ICONS.leaf) + "</span><div><b>" + t.title + "</b><small>" + t.desc + "</small></div></div>";
     }).join("");
   },
   flash: function (h, c) {
     var list = qs("[data-list]", h);
-    list.innerHTML = c.flash.products.map(function (p) {
-      return '<div class="fs-card"><div class="fs-img"><span class="fs-disc">' + p.discount + '</span><img loading="lazy" src="' + p.img + '" alt="' + p.title + '"></div>' +
-        '<div class="fs-body"><div><h3>' + p.title + '</h3><div class="fs-rate"><b>' + p.rating + "</b>" + STAR + "<span>(" + p.reviews + " تقييم)</span></div></div>" +
+    list.innerHTML = c.flash.products.map(function (p, i) {
+      return '<div class="fs-card rv" data-d="' + i * 120 + '"><div class="fs-img"><span class="fs-disc">' + p.discount + '</span><img loading="lazy" src="' + p.img + '" alt="' + p.title + '"></div>' +
+        '<div class="fs-body"><div><h3>' + p.title + '</h3><div class="fs-rate"><b>' + p.rating + "</b>" + starSVG(14) + "<span>(" + p.reviews + " تقييم)</span></div></div>" +
         '<div><div class="fs-price"><b>' + p.price + "</b>" + (p.oldPrice ? "<s>" + p.oldPrice + "</s>" : "") + "</div>" +
         '<button class="fs-add" data-add="' + p.title + '">أضف إلى السلة</button></div></div></div>';
     }).join("");
   },
   oils: function (h, c) {
     var list = qs("[data-list]", h);
-    list.innerHTML = c.oils.map(function (o) {
-      return '<article class="oil-card"><div class="oil-img"><span class="oil-num">' + o.num + '</span><img loading="lazy" src="' + o.img + '" alt="' + o.name + '"></div>' +
+    var delays = [0, 100, 150, 200];
+    list.innerHTML = c.oils.map(function (o, i) {
+      return '<article class="oil-card rv" data-d="' + (delays[i] != null ? delays[i] : i * 100) + '"><div class="oil-img"><span class="oil-num">' + o.num + '</span><img loading="lazy" src="' + o.img + '" alt="' + o.name + '"></div>' +
         '<div class="oil-body"><h3>' + o.name + " <small>" + o.latin + "</small></h3><ul>" +
         o.points.map(function (pt) { return "<li>" + CHECK + pt + "</li>"; }).join("") +
         '</ul><span class="oil-tag">' + o.tag + "</span></div></article>";
@@ -234,8 +253,9 @@ var RENDER = {
   },
   benefits: function (h, c) {
     var list = qs("[data-list]", h);
+    var delays = [0, 80, 160, 120, 200];
     list.innerHTML = c.benefits.map(function (b, i) {
-      return '<div class="ben w' + b.span + '"><span class="ghost">' + pad2(i + 1) + '</span><div class="ic">' + (ICONS[b.icon] || ICONS.leaf) + "</div><h3>" + b.title + "</h3><p>" + b.desc + "</p></div>";
+      return '<div class="ben w' + b.span + ' rv" data-d="' + (delays[i] != null ? delays[i] : 0) + '"><span class="ghost">' + pad2(i + 1) + '</span><div class="ic">' + (BEN_ICONS[b.icon] || ICONS.leaf) + "</div><h3>" + b.title + "</h3><p>" + b.desc + "</p></div>";
     }).join("");
     var vid = qs("#benefitsVideo", h);
     if (vid && c.site.benefitsVideoUrl) {
@@ -250,15 +270,16 @@ var RENDER = {
   },
   cases: function (h, c) {
     var list = qs("[data-list]", h);
-    list.innerHTML = c.cases.map(function (cs) {
-      return '<article class="case"><div class="ba" data-ba>' +
-        '<img class="after" src="' + cs.after + '" alt="بعد - ' + cs.name + '">' +
-        '<img class="before" src="' + cs.before + '" alt="قبل - ' + cs.name + '">' +
+    list.innerHTML = c.cases.map(function (cs, i) {
+      return '<article class="case rv" data-d="' + i * 120 + '"><div class="ba" data-ba>' +
+        '<img class="after" src="' + cs.after + '" alt="' + (cs.afterAlt || "بعد الاستخدام") + '">' +
+        '<img class="before" src="' + cs.before + '" alt="' + (cs.beforeAlt || "قبل الاستخدام") + '">' +
         '<span class="tag b">' + cs.beforeTag + '</span><span class="tag a">' + cs.afterTag + "</span>" +
         '<div class="handle"><div class="knob" tabindex="0" aria-label="اسحب للمقارنة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg></div></div>' +
         '<span class="hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>اسحب للمقارنة</span>' +
         '</div><div class="case-body"><div class="who"><h3>' + cs.name + "</h3><span>" + cs.period + "</span></div>" +
-        '<blockquote>"' + cs.quote + '"</div><div class="case-body-stars" style="padding:0 1.6rem 1.6rem">' + STAR + STAR + STAR + STAR + STAR + "</div></div></article>";
+        '<blockquote>"' + cs.quote + '"</blockquote>' +
+        '<div class="stars">' + starSVG(15) + starSVG(15) + starSVG(15) + starSVG(15) + starSVG(15) + "</div></div></article>";
     }).join("");
   },
   about: function (h, c) {
@@ -273,8 +294,9 @@ var RENDER = {
   },
   products: function (h, c) {
     var list = qs("[data-list]", h);
-    list.innerHTML = c.products.map(function (p) {
-      return '<div class="pd-card"><div class="pd-img"><span class="pd-label">' + p.label + '</span><img loading="lazy" src="' + p.img + '" alt="' + p.title + '"></div>' +
+    var delays = [0, 100, 200];
+    list.innerHTML = c.products.map(function (p, i) {
+      return '<div class="pd-card rv" data-d="' + (delays[i] != null ? delays[i] : i * 100) + '"><div class="pd-img"><span class="pd-label">' + p.label + '</span><img loading="lazy" src="' + p.img + '" alt="' + p.title + '"></div>' +
         '<div class="pd-body"><h3>' + p.title + "</h3><p>" + p.desc + '</p><div class="pd-price">' + p.price + "</div>" +
         '<button class="pd-btn" data-order="' + p.title + '">اطلبي الآن</button></div></div>';
     }).join("");
@@ -283,21 +305,21 @@ var RENDER = {
     var list = qs("[data-list]", h);
     list.innerHTML = c.testimonials.map(function (t) {
       var stars = "";
-      for (var i = 0; i < t.stars; i++) stars += STAR;
+      for (var i = 0; i < t.stars; i++) stars += "★";
       return '<div class="tst-slide"><div class="tst-card"><span class="quote">”</span><div class="tst-stars">' + stars + "</div><p>" + t.text + "</p>" +
         '<div class="tst-who"><span class="av">' + t.initial + '</span><div><b class="nm">' + t.name + '</b><span class="loc"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + t.city + "</span></div></div></div></div>";
     }).join("");
   },
   faq: function (h, c) {
     var list = qs("[data-list]", h);
-    list.innerHTML = c.faq.map(function (f) {
-      return '<div class="faq-item"><button class="faq-q">' + f.q + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-a"><p>' + f.a + "</p></div></div>";
+    list.innerHTML = c.faq.map(function (f, i) {
+      return '<div class="faq-item rv" data-d="' + i * 60 + '"><button class="faq-q">' + f.q + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-a"><p>' + f.a + "</p></div></div>";
     }).join("");
   },
   order: function (h, c) {
     var list = qs("[data-list]", h);
-    list.innerHTML = c.orderSteps.map(function (s) {
-      return '<div class="step-card"><div class="step-num">' + s.num + "</div><h3>" + s.title + "</h3><p>" + s.desc + '</p><span class="mini">' + s.mini + "</span></div>";
+    list.innerHTML = c.orderSteps.map(function (s, i) {
+      return '<div class="step-card rv" data-d="' + i * 100 + '"><div class="step-num">' + s.num + "</div><h3>" + s.title + "</h3><p>" + s.desc + '</p><span class="mini">' + s.mini + "</span></div>";
     }).join("");
   },
   cta: function (h) { },
@@ -328,10 +350,20 @@ var INIT = {
         var dur = 9 + Math.random() * 9;
         el.style.animationDuration = dur + "s";
         el.style.animationDelay = (-Math.random() * dur) + "s";
-        el.innerHTML = flower ? ICONS.leaf.replace("21", "21") : ICONS.leaf;
+        el.innerHTML = flower ? FLOWER : LEAF;
         fz.appendChild(el);
       }
     }
+    /* زر النزول: يمرّر إلى أول قسم مفعّل بعد الواجهة — مطابق للأصل */
+    var sd = qs("#scrollDownBtn", h);
+    if (sd) sd.addEventListener("click", function () {
+      var first = null;
+      qsa("[data-section]", app).forEach(function (el) {
+        if (el.getAttribute("data-section") === "hero") return;
+        if (!first) first = el;
+      });
+      if (first) first.scrollIntoView({ behavior: "smooth" });
+    });
     /* ميلان الصورة */
     var tilt = qs("#heroTilt", h);
     if (tilt && window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
@@ -415,7 +447,9 @@ var INIT = {
     viewport.addEventListener("mouseenter", function () { if (timer) clearInterval(timer); });
     viewport.addEventListener("mouseleave", function () { resetTimer(); });
     resetTimer();
-    window.addEventListener("resize", function () { idx = 0; apply(false); });
+    if (track._onResize) window.removeEventListener("resize", track._onResize);
+    track._onResize = function () { idx = 0; apply(false); };
+    window.addEventListener("resize", track._onResize);
     apply(false);
   },
   faq: function (h) {
@@ -504,14 +538,17 @@ var PAGE_SETTINGS_DEFAULT = [
   { id: "contact", name: "عمود التواصل (فوتر)", enabled: true },
   { id: "map", name: "خريطة الموقع", enabled: true },
   { id: "legal", name: "روابط الخصوصية / الشروط", enabled: true },
-  { id: "socialIcons", name: "أيقونات التواصل الاجتماعي", enabled: true },
+  { id: "footer", name: "تذييل الصفحة", enabled: true },
   { id: "leaves", name: "الأوراق المتساقطة", enabled: true },
   { id: "videoModal", name: "نافذة الفيديو", enabled: true },
   { id: "contactModal", name: "نافذة التواصل", enabled: true },
-  { id: "legalModal", name: "نافذة الخصوصية / الشروط", enabled: true },
+  { id: "legalModal", name: "نافذة الخصوصية / الشروط / الكوكيز", enabled: true },
   { id: "toast", name: "رسائل الإشعارات", enabled: true },
   { id: "preloader", name: "شاشة التحميل", enabled: true },
-  { id: "scrollProgress", name: "شريط تقدم التمرير", enabled: true }
+  { id: "scrollDown", name: "زر النزول للأسفل", enabled: true },
+  { id: "scrollIndicator", name: "مؤشر التمرير", enabled: true },
+  { id: "scrollProgress", name: "شريط تقدم التمرير", enabled: true },
+  { id: "socialIcons", name: "أيقونات التواصل الاجتماعي", enabled: true }
 ];
 var BUTTONS_SETTINGS_DEFAULT = [
   { id: "waFab", name: "زر الواتساب العائم", position: "right", enabled: true },
@@ -701,8 +738,7 @@ var THEME_PRESETS = [
   { name: "غابة عميقة", p: "#0F5132", a: "#D4AF37", b: "#F1F5EC" },
   { name: "نعناعي منعش", p: "#3BA98C", a: "#E0B06B", b: "#F0FAF5" },
   { name: "زيتوني دافئ", p: "#7A8450", a: "#C9A15B", b: "#F7F4EA" },
-  { name: "تيل ملكي", p: "#0E7C7B", a: "#E3BE6C", b: "#EFF7F6" },
-  { name: "وردي فاخر", p: "#D4627F", a: "#C6A15B", b: "#FDF2F5" }
+  { name: "تيل ملكي", p: "#0E7C7B", a: "#E3BE6C", b: "#EFF7F6" }
 ];
 var curTheme = null;
 var rootS = document.documentElement.style;
@@ -819,11 +855,18 @@ function applySeo() {
   }
   meta("name", "description", s.description);
   meta("name", "keywords", s.keywords);
+  meta("name", "author", s.author);
+  meta("name", "robots", s.robots);
   meta("property", "og:title", s.title);
   meta("property", "og:description", s.description);
   meta("property", "og:image", s.ogImage);
+  meta("property", "og:type", s.ogType || "website");
+  meta("property", "og:locale", s.ogLocale);
   meta("property", "og:url", s.siteUrl);
-  meta("property", "og:type", "website");
+  meta("name", "twitter:card", s.twitterCard);
+  meta("name", "twitter:title", s.title);
+  meta("name", "twitter:description", s.description);
+  meta("name", "twitter:image", s.ogImage);
   var can = document.head.querySelector('link[rel="canonical"]');
   if (!can) { can = document.createElement("link"); can.rel = "canonical"; document.head.appendChild(can); }
   can.href = s.siteUrl;
