@@ -1448,10 +1448,13 @@ border-color: transparent;
 box-shadow: 0 10px 22px var(--brand-glow)
 }
 .tst-btn.solid:hover { filter: brightness(1.08) }
-.tst-viewport { overflow: hidden; margin-inline: -8px }
-.tst-track { display: flex; transition: transform .55s cubic-bezier(.2, .7, .2, 1) }
+/* ── آلية الكاروسيل (النسخة النظيفة الجديدة) ──
+   Viewport يقتطع المسار + Track بترتيب أفقي + Slides بعرض نسبي
+   التنقل يتم حصرياً عبر transform على الـ Track (لا display:none أبداً) */
+.tst-viewport { overflow: hidden; position: relative; width: 100%; margin-inline: -8px; padding: .5rem 0 }
+.tst-track { display: flex; flex-direction: row; transition: transform .6s cubic-bezier(.25, .46, .45, .94); will-change: transform }
 .tst-track.noanim { transition: none }
-.tst-slide { flex: 0 0 33.3333%; padding-inline: .7rem; min-width: 0 }
+.tst-slide { flex: 0 0 33.3333%; max-width: 33.3333%; min-width: 0; padding-inline: .7rem; box-sizing: border-box }
 .tst-card {
 position: relative;
 background: var(--card);
@@ -1834,6 +1837,73 @@ font-variant-numeric: tabular-nums
 .cd small { font-size: .68rem; color: rgba(255, 255, 255, .65); font-weight: 700 }
 .cta-side .btn-wa { width: 100%; padding: 1.05rem; font-size: 1.02rem; border-radius: 16px }
 .cta-side small.note { display: block; margin-top: .8rem; color: rgba(255, 255, 255, .6); font-size: .75rem }
+
+/* ── كتلة السعر داخل الـ CTA (تُملأ من CONFIG.pricing) ──
+   تستوحى من خلية الساعة (.cd div) بنفس الخلفية الداكنة
+   الشفافة ونفس الحدود الذهبية الخفيفة، لتتجانس بصرياً مع
+   عدّاد الوقت الموجود فوقها مباشرةً.                          */
+.cta-price {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: .5rem;
+padding: .85rem .7rem 1rem;
+margin: 0 0 1.1rem;
+/* نفس خلية الساعة بالضبط */
+background: rgba(0, 0, 0, .3);
+border: 1px solid color-mix(in srgb, var(--accent-soft) 28%, transparent);
+border-radius: 14px
+}
+.cta-price-label {
+font-family: var(--disp);
+font-size: .85rem;
+font-weight: 800;
+color: var(--accent-soft);
+letter-spacing: .08em;
+text-align: center
+}
+.cta-price-row {
+display: flex;
+align-items: baseline;
+justify-content: center;
+gap: .55rem;
+flex-wrap: wrap
+}
+.cta-price-cur-num {
+font-family: var(--disp);
+font-size: 2.4rem;
+font-weight: 800;
+color: var(--accent-soft);
+line-height: 1;
+font-variant-numeric: tabular-nums
+}
+.cta-price-cur-unit {
+font-size: .95rem;
+font-weight: 800;
+color: var(--accent-soft)
+}
+.cta-price-sep {
+font-size: .78rem;
+font-weight: 700;
+color: rgba(255, 255, 255, .6)
+}
+.cta-price-old-num {
+font-family: var(--disp);
+font-size: 1.2rem;
+font-weight: 700;
+color: rgba(255, 255, 255, .5);
+text-decoration: line-through;
+text-decoration-color: var(--accent-soft);
+text-decoration-thickness: 1.5px;
+font-variant-numeric: tabular-nums
+}
+.cta-price-old-unit {
+font-size: .78rem;
+font-weight: 700;
+color: rgba(255, 255, 255, .5);
+text-decoration: line-through
+}
+
 .cm-box { max-width: 940px; padding: 0; overflow: hidden; display: grid; grid-template-columns: 1.1fr .9fr }
 .cm-form { padding: 2.4rem; position: relative }
 .cm-form::before {
@@ -2451,7 +2521,7 @@ html { scroll-behavior: auto }
 .pd-grid { grid-template-columns: 1fr 1fr }
 }
 @media(max-width:1023px) {
-.tst-slide { flex: 0 0 50% }
+.tst-slide { flex: 0 0 50%; max-width: 50% }
 }
 @media(max-width:900px) {
 .steps-row { grid-template-columns: repeat(2, 1fr) }
@@ -2508,7 +2578,7 @@ bottom: -6% !important;
 .pd-grid { grid-template-columns: 1fr }
 }
 @media(max-width:639px) {
-.tst-slide { flex: 0 0 100% }
+.tst-slide { flex: 0 0 100%; max-width: 100% }
 }
 @media(max-width:560px) {
 .ft-grid { grid-template-columns: 1fr }
